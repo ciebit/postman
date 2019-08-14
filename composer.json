@@ -1,0 +1,13 @@
+{
+    "name": "ciebit/postman",
+    "description": "Gerenciador de envio de correspondencias",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Johnny Saymon",
+            "email": "saymon@ciebit.com"
+        }
+    ],
+    "require": {}
+}
