@@ -9,5 +9,23 @@
             "email": "saymon@ciebit.com"
         }
     ],
-    "require": {}
+    "autoload": {
+        "psr-4": {
+            "Ciebit\\Postman\\": "app/classes/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Ciebit\\Postman\\Tests\\": "tests/classes/"
+        }
+    },
+    "require": {
+        "php": "^7.2",
+        "phpmailer/phpmailer": "^6.0",
+        "myclabs/php-enum": "^1.7"
+    },
+    "require-dev": {
+        "php": "^7.2",
+        "phpunit/phpunit": "^8.3"
+    }
 }

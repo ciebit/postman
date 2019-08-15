@@ -3,6 +3,7 @@ namespace Ciebit\Postman\Addressee;
 
 use Ciebit\Postman\Addressee\Technology;
 use Ciebit\Postman\Message;
+use PHPMailer\PHPMailer\PHPMailer;
 
 class Mail implements Technology 
 {
@@ -31,6 +32,8 @@ class Mail implements Technology
 
     public function send(Message $message): bool
     {
+        $mail = new PHPMailer;
+        
         return true;
     }
 }

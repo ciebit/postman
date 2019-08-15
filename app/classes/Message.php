@@ -16,4 +16,9 @@ class Message
     {
         return $this->message;
     }
+
+    public function __toString(): string
+    {
+        return $this->getContent();
+    }
 }

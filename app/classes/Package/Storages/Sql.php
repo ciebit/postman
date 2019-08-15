@@ -1,18 +1,22 @@
 <?php
-namespace Ciebit\Postman\Storages;
+namespace Ciebit\Postman\Package\Storages;
 
 use Ciebit\Postman\Addressee\Builder;
+use Ciebit\Postman\Exception;
 use Ciebit\Postman\Message;
 use Ciebit\Postman\Package\Collection;
 use Ciebit\Postman\Package\Package;
 use Ciebit\Postman\Package\Status;
-use Ciebit\Postman\Storages\Storage;
+use Ciebit\Postman\Package\Storages\Storage;
 use PDO;
 
 use function json_encode;
 
 class Sql implements Storage
 {
+    /** @var string */
+    private const COLUMN_CLIENT_ID = 'client_id';
+
     /** @var string */
     private const COLUMN_DATE_TIME = 'date_time';
 
@@ -41,6 +45,7 @@ class Sql implements Storage
 
     public function find(): Collection
     {
+        $fieldClientId = self::COLUMN_CLIENT_ID;
         $fieldDateTime = self::COLUMN_DATE_TIME;
         $fieldMessage = self::COLUMN_MESSAGE;
         $fieldId = self::COLUMN_ID;
@@ -51,7 +56,7 @@ class Sql implements Storage
             "SELECT (
                 `{$fieldId}`, `{$fieldMessage}`, 
                 `{$fieldStatus}`, `{$fieldTechnology}`, 
-                `{$fieldDateTime}`
+                `{$fieldClientId}`, `{$fieldDateTime}`
             )
             FROM `{$this->table}`
             WHERE `{$fieldStatus}` = {Status::PENDING}
@@ -60,7 +65,7 @@ class Sql implements Storage
         );
 
         if (! $statment->execute()) {
-
+            throw new Exception('postman.storage.sql.find', 1);
         }
 
         $collection = new Collection;
@@ -71,6 +76,7 @@ class Sql implements Storage
                     new Message($data->$fieldMessage),
                     new Status($data->$fieldStatus),
                     Builder::build(json_decode($data->$fieldTechnology, true)),
+                    $data->$fieldClientId,
                     $data->$fieldId
                 )
             );
@@ -81,23 +87,28 @@ class Sql implements Storage
 
     public function store(Package $message): Package
     {
+        $fieldClientId = self::COLUMN_CLIENT_ID;
         $fieldMessage = self::COLUMN_MESSAGE;
         $fieldStatus = self::COLUMN_STATUS;
         $fieldTechnology = self::COLUMN_TECHNOLOGY;
 
         $statment = $this->pdo->prepare(
-            "INSERT INTO {$this->table}
-            (`{$fieldMessage}`, `{$fieldStatus}`, `{$fieldTechnology}`)
-            VALUES
-            (:message, :status, :tecnology)"
+            "INSERT INTO {$this->table} (
+                `{$fieldMessage}`, `{$fieldStatus}`, 
+                `{$fieldClientId}`, `{$fieldTechnology}`
+            ) VALUES (
+                :message, :status, 
+                :client_id, :tecnology
+            )"
         );
 
         $statment->bindValue(':message', $message->getMessage(), PDO::PARAM_STR);
         $statment->bindValue(':status', $message->getStatus()->getValue(), PDO::PARAM_INT);
         $statment->bindValue(':tecnology', json_encode($message->getTecnology()), PDO::PARAM_STR);
+        $statment->bindValue(':client_id', $message->getClient()()->getId(), PDO::PARAM_INT);
 
         if (! $statment->execute()) {
-
+            throw new Exception('postman.storage.sql.store', 2);
         }
 
         $id = $this->pdo->lastInsertId();
@@ -106,6 +117,7 @@ class Sql implements Storage
             $message->getMessage(),
             $message->getStatus(),
             $message->getTecnology(),
+            $message->getClientId(),
             $id
         );
     }

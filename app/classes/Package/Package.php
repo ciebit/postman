@@ -10,6 +10,9 @@ use function date;
 
 class Package
 {
+    /** @var string */
+    private $clientId;
+
     /** @var DateTime */
     private $dateTime;
 
@@ -27,15 +30,22 @@ class Package
 
     public function __construct(
         Message $message,
-        Status $status = null,
+        Status $status,
         Technology $technology,
+        string $clientId,
         string $id
     ) {
+        $this->clientId = $clientId;
         $this->dateTime = new DateTime(date('Y-m-d H:i:s'));
         $this->id = $id;
         $this->message = $message;
         $this->status = $status;
         $this->technology = $technology;
+    }
+
+    public function getClientId(): string
+    {
+        return $this->clientId;
     }
 
     public function getDateTime(): DateTime
