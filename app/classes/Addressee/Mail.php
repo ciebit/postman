@@ -1,11 +1,11 @@
 <?php
 namespace Ciebit\Postman\Addressee;
 
-use Ciebit\Postman\Addressee\Technology;
+use Ciebit\Postman\Addressee\Addressee;
 use Ciebit\Postman\Message;
 use PHPMailer\PHPMailer\PHPMailer;
 
-class Mail implements Technology 
+class Mail implements Addressee 
 {
     /** @var string */
     private $address;

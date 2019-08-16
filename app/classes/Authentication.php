@@ -4,26 +4,26 @@ namespace Ciebit\Postman;
 class Authentication
 {
     /** @var string */
-    private $keyPublic;
+    private $privateKey;
 
     /** @var string */
-    private $keySecret;
+    private $publicKey;
 
     public function __construct(
-        string $keyPublic,
-        string $keySecret
+        string $publicKey,
+        string $privateKey
     ) {
-        $this->keyPublic = $keyPublic;
-        $this->keySecret = $keySecret;
+        $this->publicKey = $publicKey;
+        $this->privateKey = $privateKey;
     }
 
-    public function getKeyPublic(): string
+    public function getPublicKey(): string
     {
-        return $this->keyPublic;
+        return $this->publicKey;
     }
 
-    public function getKeySecret(): string
+    public function getPrivateKey(): string
     {
-        return $this->keySecret;
+        return $this->privateKey;
     }
 }

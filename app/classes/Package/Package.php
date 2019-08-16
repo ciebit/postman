@@ -1,7 +1,7 @@
 <?php
 namespace Ciebit\Postman\Package;
 
-use Ciebit\Postman\Addressee\Technology;
+use Ciebit\Postman\Addressee\Addressee;
 use Ciebit\Postman\Message;
 use Ciebit\Postman\Package\Status;
 use DateTime;
@@ -10,6 +10,9 @@ use function date;
 
 class Package
 {
+    /** @var Addressee */
+    private $addressee;
+
     /** @var string */
     private $clientId;
 
@@ -25,22 +28,25 @@ class Package
     /** @var Status */
     private $status;
 
-    /** @var Technology */
-    private $technology;
-
     public function __construct(
         Message $message,
         Status $status,
-        Technology $technology,
+        Addressee $addressee,
         string $clientId,
-        string $id
+        string $id,
+        DateTime $dateTime = null
     ) {
+        $this->addressee = $addressee;
         $this->clientId = $clientId;
-        $this->dateTime = new DateTime(date('Y-m-d H:i:s'));
+        $this->dateTime = $dateTime ?? new DateTime(date('Y-m-d H:i:s'));
         $this->id = $id;
         $this->message = $message;
         $this->status = $status;
-        $this->technology = $technology;
+    }
+
+    public function getAddressee(): Addressee
+    {
+        return $this->addressee;
     }
 
     public function getClientId(): string
@@ -66,10 +72,5 @@ class Package
     public function getStatus(): Status
     {
         return $this->status;
-    }
-
-    public function getTechnology(): Technology
-    {
-        return $this->technology;
     }
 }

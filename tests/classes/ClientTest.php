@@ -6,10 +6,21 @@ use PHPUnit\Framework\TestCase;
 
 class ClientTest extends TestCase
 {
+    /** @var string */
+    public const ID = '1';
+
+    /** @var string */
+    public const NAME = 'John';
+
+    public static function getInstance(): Client
+    {
+        return new Client(self::NAME, self::ID);
+    }
+
     public function testCreate(): void
     {
-        $client = new Client('Johnny', '1');
-        $this->assertEquals('Johnny', $client->getName());
-        $this->assertEquals('1', $client->getId());
+        $client = $this->getInstance();
+        $this->assertEquals(self::NAME, $client->getName());
+        $this->assertEquals(self::ID, $client->getId());
     }
 }
